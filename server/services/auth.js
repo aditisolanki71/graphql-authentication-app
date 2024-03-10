@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const User = mongoose.model('user');
+const User = mongoose.model('auth');
 
 // SerializeUser is used to provide some identifying token that can be saved
 // in the users session.  We traditionally use the 'ID' for this.
@@ -72,6 +72,7 @@ function signup({ email, password, req }) {
 // Express.  We have another compatibility layer here to make it work nicely with
 // GraphQL, as GraphQL always expects to see a promise for handling async code.
 function login({ email, password, req }) {
+  console.log('*login',email, password,req)
   return new Promise((resolve, reject) => {
     passport.authenticate('local', (err, user) => {
       if (!user) { reject('Invalid credentials.') }

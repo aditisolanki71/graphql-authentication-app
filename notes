@@ -1,0 +1,137 @@
+git clone https://github.com/StephenGrider/auth-graphql-starter.git
+
+>cd clone auth-graphql-starter
+>code .
+
+
+
+A web page --> user(username, password) --> passport librbry -->this is user5 --> save a note in the users cookie so that we know this is user 5(save i
+n user cookie)
+
+1)Decoupled Approach:-
+A web page --> Mystry User(authenticate Req) --> Passport
+           <--     identified user           <--
+
+            --      identified user          --> GraphQL
+            <--         Response             <--
+
+
+Take care of passport(req identified by passport automatically)
+then come  to graphql
+
+
+2)Coupled Approach:-
+web page --> mystery user(auth req) -->GraphQL  --> Passport
+                identified user      <--GraphQL  <-- passport identified user
+
+            Identified user -->     GraphQL
+            Respose         <--
+
+
+            
+1)Couple 
+--> use in manner it intended
+-->FB use graphql
+
+2)Decoupled
+-->diff UI element / component
+split graphQL nd React
+
+
+*)Types:
+User    --> Signup
+        --> Login
+        --> Logout
+
+
+*)signup mutation:-
+mutation {
+  signup(email: "test@test.com", password: "password") {
+    email
+  }
+}
+
+output:-
+{
+  "data": {
+    "signup": {
+      "email": "test@test.com"
+    }
+  }
+}
+
+
+*)logout mutation:-
+mutation {
+  logout {
+    email
+  }
+}
+
+output:-
+{
+  "data": {
+    "logout": null
+  }
+}
+
+*)login mutation:-
+mutation {
+  login(email: "test@test.com", password: "password") {
+    email
+  }
+}
+
+
+output:-
+{
+  "data": {
+    "login": {
+      "email": "test@test.com"
+    }
+  }
+}
+
+*)query:-
+{
+  auth {
+    email
+  }
+}
+
+{
+  "data": {
+    "auth": null
+  }
+}
+
+
+*)logout mmutation:-
+mutation {
+  logout {
+    email
+  }
+}
+
+*)query of user auth or not:-
+{
+  auth {
+    email
+  }
+}
+
+
+*)client
+1)index.js ApolloProvider
+2)react router config
+
+
+query--> components
+
+query associates with componentwhen we re-run query all of the component that associates wwith that query automatically get update components
+
+1 query associate with 100 component
+1 component decide to re-render then all 100 component will also get re-render
+
+figgure out?
+

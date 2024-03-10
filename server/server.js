@@ -1,7 +1,8 @@
 const express = require('express');
 const models = require('./models');
-const expressGraphQL = require('express-graphql');
+const expressGraphQL = require('express-graphql').graphqlHTTP;
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const passportConfig = require('./services/auth');
@@ -12,24 +13,38 @@ const schema = require('./schema/schema');
 const app = express();
 
 // Replace with your Mongo Atlas URI
-const MONGO_URI = '';
+//const MONGO_URI = 'mongodb+srv://aditi:NruNqUTV1OPMxTvN@cluster0.v364j.mongodb.net/lyricaldb?retryWrites=true&w=majority';
+// const MONGO_URI = '';
+const MONGO_URI = `mongodb+srv://${process.env.mongoUserName}:${process.env.mongoUserPassword}@cluster0.v364j.mongodb.net/${process.env.mongoDatabase}?retryWrites=true&w=majority`;
+
 if (!MONGO_URI) {
   throw new Error('You must provide a Mongo Atlas URI');
 }
 
 // Mongoose's built in promise library is deprecated, replace it with ES2015 Promise
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 
 // Connect to the mongoDB instance and log a message
 // on success or failure
-mongoose.set('strictQuery', false);
+// mongoose.set('strictQuery', false);
 
-mongoose.connect(MONGO_URI);
-mongoose.connection
-  .once('open', () => console.log('Connected to Mongo Atlas instance.'))
-  .on('error', (error) =>
-    console.log('Error connecting to Mongo Atlas:', error)
-  );
+// mongoose.connect(MONGO_URI);
+mongoose
+    .connect(MONGO_URI)
+    .then(() => {
+        console.log('MongoDB connected successfully');
+        app.listen({ port: 3000 }, () => {
+          console.log('Your Apollo Server is running on port 3000')
+      })
+    })
+    // .error(() => {
+    //     console.error('Error while connecting to MongoDB');
+    // });
+// mongoose.connection
+//   .once('open', () => console.log('Connected to Mongo Atlas instance.'))
+//   .on('error', (error) =>
+//     console.log('Error connecting to Mongo Atlas:', error)
+//   );
 
 // Configures express to use sessions.  This places an encrypted identifier
 // on the users cookie.  When a user makes a request, this middleware examines
@@ -48,11 +63,31 @@ app.use(
   })
 );
 
+app.use(bodyParser.json());
+console.log("aditi");
+// app.use('/graphql', expressGraphQL({
+//   schema,
+//   graphiql: true
+// }));
 // Passport is wired into express as a middleware. When a request comes in,
 // Passport will examine the request's session (as set by the above config) and
 // assign the current user to the 'req.user' object.  See also servces/auth.js
 app.use(passport.initialize());
 app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  // Replace this with your User model's findById function
+  // User.findById(id, (err, user) => {
+  //   done(err, user);
+  // });
+  User.findOne({ _id: id }, (err, user) => {
+    done(err, user);
+  });
+});
 
 // Instruct Express to pass on any request made to the '/graphql' route
 // to the GraphQL instance.

@@ -1,0 +1,7 @@
+{
+    "env": {
+        "mongoDatabase": "authdb",
+        "mongoUserName": "aditi",
+        "mongoUserPassword": "NruNqUTV1OPMxTvN"
+    }
+ }

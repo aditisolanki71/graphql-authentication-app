@@ -1,0 +1,84 @@
+# mutation {
+#   signup(email: "test1@test.com", password: "password") {
+#     email
+#   }
+# }
+
+
+mutation Signup($email: String, $password: String){
+  signup(email: $email, password: $password) {
+    email
+  }
+}
+
+query variables:-
+{
+  "email": "aditisolanki@test.com",
+  "password": "password"
+}
+
+output:-
+{
+  "data": {
+    "signup": {
+      "email": "aditisolanki@test.com"
+    }
+  }
+}
+
+
+
+
+
+# mutation {
+#   login(email: "test1@test.com", password: "password") {
+#     email
+#   }
+# }
+
+mutation Login($email: String, $password: String){
+  login(email: $email, password: $password) {
+    id
+    email
+  }
+}
+
+*)query variables:-
+{
+  "email":"test1@test.com",
+  "password":"password"
+}
+
+output:-
+{
+  "data": {
+    "login": {
+      "id": "65ec4a98608cdc4367e69ce3",
+      "email": "test1@test.com"
+    }
+  }
+}
+
+
+
+
+
+
+mutation {
+  logout {
+    email
+  }
+}
+
+
+
+
+
+
+
+# {
+#   user {
+#     email,
+#     id
+#   }
+# }

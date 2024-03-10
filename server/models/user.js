@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 // Every user has an email and password.  The password is not stored as
 // plain text - see the authentication helpers below.
+//model
 const UserSchema = new Schema({
   email: String,
   password: String
@@ -39,4 +40,4 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
   });
 };
 
-mongoose.model('user', UserSchema);
+mongoose.model('auth', UserSchema);
